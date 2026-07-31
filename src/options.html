@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cookie Link Settings</title>
+    <link rel="icon" href="../icons/icon32.png" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="card">
+      <header class="header">
+        <img src="../icons/icon48.png" alt="" width="40" height="40" />
+        <div>
+          <h1>Cookie Link</h1>
+          <p class="subtitle">Copy cookies to a target URL and open it</p>
+        </div>
+      </header>
+
+      <form id="settings-form">
+        <fieldset>
+          <legend>Which cookies to copy</legend>
+
+          <label class="radio-row">
+            <input type="radio" name="cookieMode" value="all" />
+            <span>All cookies from the active tab's site</span>
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="cookieMode" value="whitelist" />
+            <span>Only cookies named below (whitelist)</span>
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="cookieMode" value="blacklist" />
+            <span>All cookies except those named below (blacklist)</span>
+          </label>
+
+          <label class="field" id="cookie-names-field">
+            <span class="field-label">Cookie names</span>
+            <textarea
+              id="cookie-names"
+              rows="4"
+              placeholder="one per line, or comma-separated&#10;e.g. session_id, auth_token"
+            ></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Destination</legend>
+
+          <label class="field">
+            <span class="field-label">Target URL</span>
+            <input type="text" id="target-url" placeholder="http://localhost:5173" />
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="open-new-tab" />
+            <span>Open target URL in a new tab (otherwise reuses the current tab)</span>
+          </label>
+        </fieldset>
+
+        <div class="actions">
+          <button type="submit" id="save-button">Save settings</button>
+          <span id="status" class="status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

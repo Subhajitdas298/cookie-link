@@ -1,0 +1,20 @@
+{
+  "name": "cookie-link",
+  "version": "0.1.0",
+  "description": "Chrome extension that copies cookies from the active tab onto a target URL's domain, then opens it.",
+  "private": true,
+  "scripts": {
+    "generate-icons": "node scripts/generate-icons.js",
+    "sync-version": "node scripts/sync-version.js",
+    "build": "npm run sync-version && node scripts/build.js",
+    "version": "npm run sync-version && git add manifest.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/subhajitdas298/cookie-link"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "pngjs": "^7.0.0"
+  }
+}
