@@ -67,6 +67,16 @@ note `chrome.*` APIs (settings load/save) only exist inside an actual
 loaded extension, so functional testing still means reloading the unpacked
 extension in `chrome://extensions`.
 
+The bundle deliberately avoids MUI's `TextField` in favor of
+`OutlinedInput` + `InputLabel` — `TextField` statically imports `Select`
+(and everything `Select` needs: `Popover`, `MenuList`, `Modal`,
+`FocusTrap`), so using it at all pulls in a dropdown menu's worth of code
+none of these fields need, even though nothing here renders a dropdown.
+That swap alone cut the compiled bundle by about 12% (~380KB / ~120KB
+gzipped, down from ~433KB / ~135KB). Compare
+`src/options-assets/options.js`'s size before reintroducing `TextField`
+anywhere in `options-src/`.
+
 ## Releases
 
 `.github/workflows/release.yml` runs on every push to `main`: it bumps the

@@ -9,12 +9,13 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  InputLabel,
+  OutlinedInput,
   Paper,
   Radio,
   RadioGroup,
   Snackbar,
   Stack,
-  TextField,
   ThemeProvider,
   Typography,
   useMediaQuery,
@@ -128,18 +129,18 @@ export default function App() {
                   label="All cookies except those named below (blacklist)"
                 />
               </RadioGroup>
-              <TextField
-                id="cookie-names"
-                label="Cookie names"
-                multiline
-                minRows={4}
-                fullWidth
-                sx={{ mt: 1.5 }}
-                placeholder={'one per line, or comma-separated\ne.g. session_id, auth_token'}
-                value={cookieNamesText}
-                onChange={(e) => setCookieNamesText(e.target.value)}
-                disabled={!needsCookieList}
-              />
+              <FormControl fullWidth sx={{ mt: 1.5 }} disabled={!needsCookieList}>
+                <InputLabel htmlFor="cookie-names">Cookie names</InputLabel>
+                <OutlinedInput
+                  id="cookie-names"
+                  label="Cookie names"
+                  multiline
+                  minRows={4}
+                  placeholder={'one per line, or comma-separated\ne.g. session_id, auth_token'}
+                  value={cookieNamesText}
+                  onChange={(e) => setCookieNamesText(e.target.value)}
+                />
+              </FormControl>
             </FormControl>
           </Paper>
 
@@ -147,14 +148,16 @@ export default function App() {
             <FormLabel component="legend" sx={{ fontSize: '0.8rem', fontWeight: 600, mb: 1.25, display: 'block' }}>
               Destination
             </FormLabel>
-            <TextField
-              id="target-url"
-              label="Target URL"
-              fullWidth
-              value={targetUrl}
-              onChange={(e) => setTargetUrl(e.target.value)}
-              placeholder="http://localhost:5173"
-            />
+            <FormControl fullWidth>
+              <InputLabel htmlFor="target-url">Target URL</InputLabel>
+              <OutlinedInput
+                id="target-url"
+                label="Target URL"
+                value={targetUrl}
+                onChange={(e) => setTargetUrl(e.target.value)}
+                placeholder="http://localhost:5173"
+              />
+            </FormControl>
             <FormControlLabel
               sx={{ mt: 1 }}
               control={
