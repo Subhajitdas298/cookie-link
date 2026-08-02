@@ -52,9 +52,12 @@ into `manifest.json`.
 ## Releases
 
 `.github/workflows/release.yml` runs on every push to `main`: it bumps the
-patch version (`npm version patch`), pushes the version commit + tag, builds
-the zip, and publishes a GitHub release with the zip attached. The version
-bump commit is tagged `[skip ci]` so it doesn't retrigger itself.
+patch version, pushes the version commit + tag, builds the zip, and
+publishes a GitHub release with the zip attached. The version bump commit is
+tagged `[skip ci]` so it doesn't retrigger itself. If the resulting version's
+git tag already exists (e.g. it was created manually, or a previous run got
+that far before failing), it keeps bumping the patch number until it finds
+one that isn't taken, then builds and releases that version instead.
 
 If the required secrets are configured, the same run also uploads and
 publishes that build to the Chrome Web Store — see **[DEPLOY.md](DEPLOY.md)**
