@@ -42,12 +42,30 @@ signed-in Chrome instances).
 ```sh
 npm install
 npm run generate-icons   # regenerate icons/*.png from scripts/generate-icons.js
-npm run build             # produces dist/cookie-link-v<version>.zip
+npm run build             # builds the options UI, then produces dist/cookie-link-v<version>.zip
 ```
 
 `package.json`'s `version` is the single source of truth; `npm run
 sync-version` (run automatically by `build` and by `npm version`) copies it
 into `manifest.json`.
+
+### Options page (React + MUI)
+
+The settings UI is written in React with [MUI](https://mui.com/) — source
+lives in `options-src/` (`App.jsx`, `theme.js` for the custom brand-colored
+theme). `npm run build:options` (part of `npm run build`) compiles it with
+Vite into `src/options.html` + `src/options-assets/options.js`, which is
+what `manifest.json`'s `options_ui.page` actually points at and what ships
+in the extension.
+
+Those compiled files are committed, the same way `icons/*.png` are —
+loading this repo unpacked works without a build step. If you edit anything
+under `options-src/`, run `npm run build:options` and commit the
+regenerated `src/options.html` and `src/options-assets/` alongside it.
+`npm run dev:options` starts a Vite dev server for iterating on layout, but
+note `chrome.*` APIs (settings load/save) only exist inside an actual
+loaded extension, so functional testing still means reloading the unpacked
+extension in `chrome://extensions`.
 
 ## Releases
 

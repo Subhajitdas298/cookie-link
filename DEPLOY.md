@@ -91,6 +91,9 @@ npm run publish:chrome
 
 - Icons: `npm run generate-icons` (edits `icons/*.png`, see
   `scripts/generate-icons.js`).
+- Promo images: `npm run generate-promo-images` (edits `store/promo/*.png`,
+  see `scripts/generate-promo-images.js`). Optional — only needed if you opt
+  into featured placement.
 - Screenshots: there's no committed script for these (they're driven
   through a real, unpacked-extension Chromium session via
   `playwright-core`, which isn't a project dependency) — take fresh

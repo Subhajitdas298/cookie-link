@@ -134,3 +134,10 @@ blobs pulled from a server.
 `screenshot-2-settings-dark.png` (1280×800, generated from the real options
 page). Regenerate any time the UI changes with a Playwright script driving
 the unpacked extension — see `DEPLOY.md`.
+
+## Promotional images (optional — only needed for featured placement)
+
+`store/promo/small-tile-440x280.png` and `store/promo/marquee-1400x560.png`,
+both opaque (Chrome Web Store rejects transparency in these). Regenerate
+with `npm run generate-promo-images` any time the icon/brand look changes —
+see `scripts/generate-promo-images.js`.
