@@ -7,6 +7,7 @@
     "generate-icons": "node scripts/generate-icons.js",
     "sync-version": "node scripts/sync-version.js",
     "build": "npm run sync-version && node scripts/build.js",
+    "publish:chrome": "node scripts/publish-chrome-web-store.js",
     "version": "npm run sync-version && git add manifest.json"
   },
   "repository": {
@@ -15,6 +16,7 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
+    "chrome-webstore-upload": "^6.0.0",
     "pngjs": "^7.0.0"
   }
 }

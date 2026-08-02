@@ -56,3 +56,30 @@ jobs:
             "dist/cookie-link-v${{ steps.version.outputs.version }}.zip" \
             --title "v${{ steps.version.outputs.version }}" \
             --generate-notes
+
+      - name: Check Chrome Web Store credentials
+        id: cws-secrets
+        run: |
+          if [ -n "${{ secrets.CHROME_EXTENSION_ID }}" ] && \
+             [ -n "${{ secrets.CHROME_PUBLISHER_ID }}" ] && \
+             [ -n "${{ secrets.CHROME_CLIENT_ID }}" ] && \
+             [ -n "${{ secrets.CHROME_CLIENT_SECRET }}" ] && \
+             [ -n "${{ secrets.CHROME_REFRESH_TOKEN }}" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to Chrome Web Store
+        if: steps.cws-secrets.outputs.present == 'true'
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+        run: npm run publish:chrome
+
+      - name: Chrome Web Store publish skipped
+        if: steps.cws-secrets.outputs.present != 'true'
+        run: echo "CHROME_EXTENSION_ID/CHROME_PUBLISHER_ID/CHROME_CLIENT_ID/CHROME_CLIENT_SECRET/CHROME_REFRESH_TOKEN not all set as repo secrets — skipping Chrome Web Store publish. See DEPLOY.md to set it up."

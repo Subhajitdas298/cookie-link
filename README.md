@@ -55,3 +55,10 @@ into `manifest.json`.
 patch version (`npm version patch`), pushes the version commit + tag, builds
 the zip, and publishes a GitHub release with the zip attached. The version
 bump commit is tagged `[skip ci]` so it doesn't retrigger itself.
+
+If the required secrets are configured, the same run also uploads and
+publishes that build to the Chrome Web Store — see **[DEPLOY.md](DEPLOY.md)**
+for the one-time setup (developer account, OAuth credentials, first manual
+listing) and **[store/LISTING.md](store/LISTING.md)** /
+**[store/PRIVACY.md](store/PRIVACY.md)** for the listing copy and privacy
+policy used to fill out the Web Store dashboard.
