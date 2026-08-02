@@ -1,15 +1,17 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S npx tsx
 // Generates opaque Chrome Web Store promotional images (small tile and
 // marquee) — the cookie glyph centered on a warm gradient background. CWS
 // rejects transparency in these, unlike the toolbar icons, so the canvas is
 // filled fully opaque before anything else is painted.
-'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const { PNG } = require('pngjs');
-const { Canvas, hex, linearGradient, coverage, sdRoundedRect } = require('./lib/raster');
-const { drawCookieGlyph } = require('./lib/cookie-glyph');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { PNG } from 'pngjs';
+import { Canvas, hex, linearGradient, coverage, sdRoundedRect } from './lib/raster';
+import { drawCookieGlyph } from './lib/cookie-glyph';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const OUT_DIR = path.join(__dirname, '..', 'store', 'promo');
 
@@ -21,7 +23,7 @@ const SIZES = [
   { name: 'marquee-1400x560.png', width: 1400, height: 560 },
 ];
 
-function drawPromo(width, height) {
+function drawPromo(width: number, height: number): PNG {
   const canvas = new Canvas(width, height);
 
   const bgGradient = linearGradient(BG_START, BG_END, 0, 0, width, height);

@@ -140,4 +140,4 @@ the unpacked extension — see `DEPLOY.md`.
 `store/promo/small-tile-440x280.png` and `store/promo/marquee-1400x560.png`,
 both opaque (Chrome Web Store rejects transparency in these). Regenerate
 with `npm run generate-promo-images` any time the icon/brand look changes —
-see `scripts/generate-promo-images.js`.
+see `scripts/generate-promo-images.ts`.

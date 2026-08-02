@@ -1,9 +1,9 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, type PaletteMode, type Theme } from '@mui/material/styles';
 
 // Customized MUI theme matching the extension's existing brand palette
 // (the same amber/cookie + slate-blue link tones used by the icon), rather
 // than MUI's default indigo/pink.
-export function createAppTheme(mode) {
+export function createAppTheme(mode: PaletteMode): Theme {
   return createTheme({
     palette: {
       mode,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
   Alert,
   Avatar,
@@ -26,14 +26,15 @@ import {
   getSettings,
   parseCookieNames,
   saveSettings,
-} from '../src/common/settings.js';
-import { createAppTheme } from './theme.js';
+  type CookieMode,
+} from '../common/settings';
+import { createAppTheme } from './theme';
 
 export default function App() {
   const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = useMemo(() => createAppTheme(prefersDark ? 'dark' : 'light'), [prefersDark]);
 
-  const [cookieMode, setCookieMode] = useState(DEFAULT_SETTINGS.cookieMode);
+  const [cookieMode, setCookieMode] = useState<CookieMode>(DEFAULT_SETTINGS.cookieMode);
   const [cookieNamesText, setCookieNamesText] = useState('');
   const [targetUrl, setTargetUrl] = useState(DEFAULT_SETTINGS.targetUrl);
   const [openInNewTab, setOpenInNewTab] = useState(DEFAULT_SETTINGS.openInNewTab);
@@ -54,7 +55,7 @@ export default function App() {
     }
   }, []);
 
-  async function handleSave(event) {
+  async function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const settings = await saveSettings({
       cookieMode,
@@ -95,10 +96,10 @@ export default function App() {
             visibility: loaded ? 'visible' : 'hidden',
           }}
         >
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 3 }}>
             <Avatar src={iconUrl} alt="" variant="rounded" sx={{ width: 40, height: 40 }} />
             <Box>
-              <Typography variant="h6" fontWeight={700} lineHeight={1.2}>
+              <Typography variant="h6" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
                 Cookie Link
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -112,7 +113,11 @@ export default function App() {
               <FormLabel component="legend" sx={{ fontSize: '0.8rem', fontWeight: 600, mb: 0.5 }}>
                 Which cookies to copy
               </FormLabel>
-              <RadioGroup name="cookieMode" value={cookieMode} onChange={(e) => setCookieMode(e.target.value)}>
+              <RadioGroup
+                name="cookieMode"
+                value={cookieMode}
+                onChange={(e) => setCookieMode(e.target.value as CookieMode)}
+              >
                 <FormControlLabel
                   value={COOKIE_MODES.ALL}
                   control={<Radio size="small" />}

@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import App from './App.jsx';
+import App from './App';
 
 // Set at runtime (rather than a static <link> Vite would try to bundle as
 // an asset) since the extension's real base URL isn't known until it's
@@ -11,4 +11,8 @@ if (typeof chrome !== 'undefined' && chrome.runtime?.getURL) {
   document.head.appendChild(link);
 }
 
-createRoot(document.getElementById('root')).render(<App />);
+const container = document.getElementById('root');
+if (!container) {
+  throw new Error('#root element not found');
+}
+createRoot(container).render(<App />);

@@ -90,12 +90,14 @@ npm run publish:chrome
 ## Regenerating store assets
 
 - Icons: `npm run generate-icons` (edits `icons/*.png`, see
-  `scripts/generate-icons.js`).
+  `scripts/generate-icons.ts`).
 - Promo images: `npm run generate-promo-images` (edits `store/promo/*.png`,
-  see `scripts/generate-promo-images.js`). Optional — only needed if you opt
+  see `scripts/generate-promo-images.ts`). Optional — only needed if you opt
   into featured placement.
-- Screenshots: there's no committed script for these (they're driven
-  through a real, unpacked-extension Chromium session via
-  `playwright-core`, which isn't a project dependency) — take fresh
-  1280×800 screenshots of `src/options.html` any time the UI changes
-  and replace the files in `store/screenshots/`.
+- Screenshots: there's no committed script for these — they're one-off,
+  taken by hand at 1280×800 against the real options page. The E2E suite's
+  `e2e/fixtures.ts` (which launches this unpacked extension in a real,
+  loaded Chromium context) is the easiest starting point: point a throwaway
+  Playwright script at it, `page.goto` the built `src/options.html`, and
+  `page.screenshot()`. Replace the files in `store/screenshots/` any time
+  the UI changes.
