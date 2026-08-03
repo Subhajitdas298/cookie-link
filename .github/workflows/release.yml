@@ -15,6 +15,8 @@ jobs:
   test:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,6 +37,9 @@ jobs:
 
       - name: Install Playwright's Chromium
         run: npx playwright install --with-deps chromium
+
+      - name: Install Xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
 
       - name: Run E2E tests
         run: xvfb-run -a npx playwright test

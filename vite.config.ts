@@ -25,8 +25,12 @@ export default defineConfig({
         background: path.resolve(__dirname, 'extension/background.ts'),
       },
       output: {
+        // Entry chunk names must stay stable/unhashed: manifest.json
+        // references background.js and options.html by exact path. Shared
+        // chunks (e.g. common/settings.ts, pulled in by both entries) get a
+        // hash so two same-named chunks can never silently collide.
         entryFileNames: (chunk) => (chunk.name === 'background' ? 'background.js' : 'options-assets/[name].js'),
-        chunkFileNames: 'options-assets/[name].js',
+        chunkFileNames: 'options-assets/[name]-[hash].js',
         assetFileNames: 'options-assets/[name][extname]',
       },
     },
