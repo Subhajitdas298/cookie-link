@@ -1,6 +1,6 @@
 {
   "name": "cookie-link",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Chrome extension that copies cookies from the active tab onto a target URL's domain, then opens it.",
   "private": true,
   "type": "module",
