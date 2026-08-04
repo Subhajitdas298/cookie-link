@@ -1,0 +1,44 @@
+{
+  "name": "cookie-link",
+  "version": "0.1.0",
+  "description": "Chrome extension that copies cookies from the active tab onto a target URL's domain, then opens it.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate-icons": "tsx scripts/generate-icons.ts",
+    "generate-promo-images": "tsx scripts/generate-promo-images.ts",
+    "typecheck": "tsc --noEmit",
+    "build:options": "vite build",
+    "dev:options": "vite",
+    "sync-version": "tsx scripts/sync-version.ts",
+    "build": "npm run typecheck && npm run build:options && npm run sync-version && tsx scripts/build.ts",
+    "publish:chrome": "tsx scripts/publish-chrome-web-store.ts",
+    "test:e2e": "playwright test",
+    "version": "npm run sync-version && git add manifest.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/subhajitdas298/cookie-link"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/chrome": "^0.2.5",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "chrome-webstore-upload": "^6.0.0",
+    "pngjs": "^7.0.0",
+    "tsx": "^4.23.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.0"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.2.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  }
+}
