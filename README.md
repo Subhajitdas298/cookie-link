@@ -15,9 +15,24 @@ Click the toolbar icon and the extension:
 3. Sets each filtered cookie on the configured target URL's domain.
 4. Opens the target URL — either in the current tab or a new one.
 
-The toolbar icon shows a badge with the number of cookies copied (or `!` on
-failure — check the service worker console via `chrome://extensions` for
-details).
+The toolbar icon shows a badge with the number of cookies successfully
+copied: green if every filtered cookie made it, amber if some were skipped
+(check the service worker console via `chrome://extensions` for exactly
+which ones and why), or `!` in red if the whole operation failed outright.
+
+### A real limitation, not a bug: `__Secure-`/`__Host-` cookies need an HTTPS target
+
+Cookies named with the `__Secure-` or `__Host-` prefix are required *by the
+browser* to always carry the `Secure` attribute — `__Host-` additionally
+requires `Path=/` and no `Domain`. That's not something this extension can
+work around: `chrome.cookies.set()` will reject such a cookie outright if
+the target isn't `https://`. Many auth libraries default to prefixed
+session cookies, and the default target here is a plain
+`http://localhost:5173` dev server, so this comes up often — if you need to
+receive one of these, your target has to be HTTPS (a local dev server with
+a self-signed cert, a tunnel, etc.). The extension will skip such cookies
+and log a specific warning (`"__Secure-" cookies require Secure, but the
+target is not HTTPS`) rather than failing silently.
 
 ## Settings
 

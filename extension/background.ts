@@ -1,6 +1,7 @@
 import { getSettings, COOKIE_MODES, type Settings } from './common/settings';
 
 const BADGE_OK_COLOR = '#16A34A';
+const BADGE_WARN_COLOR = '#D97706';
 const BADGE_ERROR_COLOR = '#DC2626';
 const BADGE_CLEAR_DELAY_MS = 2500;
 
@@ -22,10 +23,19 @@ async function handleClick(tab: chrome.tabs.Tab): Promise<void> {
   const sourceCookies = await chrome.cookies.getAll({ url: tab.url });
   const filtered = filterCookies(sourceCookies, settings);
 
-  await Promise.all(filtered.map((cookie) => copyCookieToTarget(cookie, targetUrl)));
+  const results = await Promise.all(filtered.map((cookie) => copyCookieToTarget(cookie, targetUrl)));
   await openTarget(targetUrl, settings.openInNewTab, tab.id);
 
-  await flashBadge(String(filtered.length), BADGE_OK_COLOR);
+  const succeeded = results.filter((r) => r.ok).length;
+  const failed = results.length - succeeded;
+  if (failed > 0) {
+    console.warn(
+      `Cookie Link: ${failed} of ${results.length} cookie(s) could not be copied — see warnings above for why each one failed.`
+    );
+    await flashBadge(String(succeeded), BADGE_WARN_COLOR);
+  } else {
+    await flashBadge(String(succeeded), BADGE_OK_COLOR);
+  }
 }
 
 function filterCookies(cookies: chrome.cookies.Cookie[], settings: Settings): chrome.cookies.Cookie[] {
@@ -45,8 +55,37 @@ function normalizeTargetUrl(raw: string): URL {
   return new URL(withProtocol);
 }
 
-async function copyCookieToTarget(cookie: chrome.cookies.Cookie, targetUrl: URL): Promise<void> {
+interface CopyResult {
+  ok: boolean;
+}
+
+// Cookies named with the __Secure- or __Host- prefix are required by the
+// browser (not by us) to always carry Secure — and __Host- additionally
+// requires Path=/ and no Domain. There's no way to copy such a cookie onto
+// an http:// target; downgrading `secure` for it just makes chrome.cookies.set
+// reject it outright. Recognizing this upfront turns a silent per-cookie
+// failure into one clear, specific warning instead of a generic Chrome error.
+function securePrefixBlocker(cookie: chrome.cookies.Cookie, secure: boolean): string | null {
+  if (cookie.name.startsWith('__Host-')) {
+    if (!secure) return '"__Host-" cookies require Secure, but the target is not HTTPS';
+    if (cookie.path !== '/') return `"__Host-" cookies require Path=/, but this cookie's path is "${cookie.path}"`;
+    return null;
+  }
+  if (cookie.name.startsWith('__Secure-') && !secure) {
+    return '"__Secure-" cookies require Secure, but the target is not HTTPS';
+  }
+  return null;
+}
+
+async function copyCookieToTarget(cookie: chrome.cookies.Cookie, targetUrl: URL): Promise<CopyResult> {
   const secure = cookie.secure && targetUrl.protocol === 'https:';
+
+  const blocker = securePrefixBlocker(cookie, secure);
+  if (blocker) {
+    console.warn(`Cookie Link: could not copy cookie "${cookie.name}" — ${blocker}. Use an HTTPS target to receive it.`);
+    return { ok: false };
+  }
+
   let sameSite = cookie.sameSite;
   if (sameSite === 'no_restriction' && !secure) {
     // A cookie can't be SameSite=None without Secure; downgrade rather than fail.
@@ -69,8 +108,10 @@ async function copyCookieToTarget(cookie: chrome.cookies.Cookie, targetUrl: URL)
 
   try {
     await chrome.cookies.set(details);
+    return { ok: true };
   } catch (err) {
     console.warn(`Cookie Link: could not set cookie "${cookie.name}" on ${targetUrl.hostname}`, err);
+    return { ok: false };
   }
 }
 
